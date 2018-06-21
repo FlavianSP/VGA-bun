@@ -1,0 +1,88 @@
+module VGA(
+
+	input clock,reset,rb,gb,bb,
+	input [3:0] mode, color,
+	output [11:0]  x,y,
+	output [3:0] rv,gv,bv,
+	output HSync,VSync,Disp_Active,VSyncN,HSyncN
+
+);
+
+reg[9:0] visibleH,frontH,backH,syncH,visibleV,frontV,backV,syncV;
+wire w1;
+reg val;
+
+assign HSyncN = ~HSync;
+
+assign VSyncN = ~VSync;
+
+assign Disp_Active = ((x <= visualH) & (y <= visualV)) ? 1 : 0;
+
+HSync dut(
+
+	.frontN(frontH),
+	.backN(backH),
+	.syncN(syncH),
+	.visibleN(visibleH),
+	.clock(clock),
+	.reset(reset),
+	.sync0(HSync),
+	.x(x)
+
+);
+
+VSync dut1(
+
+	.frontN(frontV),
+	.backN(backV),
+	.syncN(syncV),
+	.visibleN(visibleV),
+	.clock(HSync),
+	.reset(reset),
+	.sync0(VSync),
+	.y(y)
+
+);
+
+Divisor dut2 (
+
+	.clock(clock),
+	.reset(reset),
+	.val(val),
+	.mode(mode),
+	.out(out)
+
+);
+
+colors dut3(
+
+	.clock(clock),
+	.color(color),
+	.rv(rv),
+	.gv(gv),
+	.bv(bv),
+	.rb(rb),
+	.gb(gb),
+	.bb(bb)
+
+);
+
+assign visualH = 800;
+
+assign frontH = 56;
+
+assign syncH = 120;
+
+assign backH = 64;
+
+assign val = 1;
+
+assign visualV = 600;
+
+assign frontV = 37;
+
+assign syncV = 6;
+
+assign backV = 23;
+
+endmodule

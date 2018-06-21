@@ -1,0 +1,33 @@
+module Divisor(
+
+	input [3:0] mode,
+	input clock,
+	input reset,
+	input val,
+	output reg [3:0] out
+
+);
+
+reg [31:0] counter;
+
+always@(posedge clock or posedge reset) begin
+
+	if(reset)
+		
+		counter <= 0;
+		out <= 0;
+		
+		else
+		
+		if (counter == val)
+		
+			out <= ~out;
+			counter <= 0;
+			
+			else
+			
+			counter <= counter + 1;
+			
+end
+
+endmodule
